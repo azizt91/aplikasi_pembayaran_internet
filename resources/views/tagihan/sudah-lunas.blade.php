@@ -14,6 +14,7 @@
                     <th>Bulan</th>
                     <th>Tagihan</th>
                     <th>Status</th>
+                    <th>Pembayaran Via</th>
                     <th>Action</th>
                   </tr>
                 </thead>
@@ -44,6 +45,13 @@
                               @if ($tagihan->status === 'LS')
                               <span class="badge bg-success text-white rounded-pill">Lunas</span>
                               @endif
+                          </td>
+                          <td class="small">
+                            @if ($tagihan->pembayaran_via == 'online')
+                                <span class="badge badge-pill badge-success" style="color: #ffffff;">ONLINE</span>
+                            @elseif ($tagihan->pembayaran_via == 'cash')
+                                <span class="badge badge-pill badge-info" style="color: #ffffff;">CASH</span>
+                            @endif
                           </td>
                           <td>
                             {{-- <a href="#" class="btn btn-primary btn-sm"><i class="fas fa-print"> Struk</i></a> --}}

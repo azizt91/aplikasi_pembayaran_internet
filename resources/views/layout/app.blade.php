@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Selinggo-Net | Aplikasi Tagihan Pelanggan</title>
+    <title>Apik Corporation | Aplikasi Tagihan Pelangga</title>
 
     @include('layout.head')
 
@@ -89,7 +89,7 @@
                         Logout
                     </button>
                 </div>
-                
+
             </div>
         </div>
     </div>

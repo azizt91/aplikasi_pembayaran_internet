@@ -12,7 +12,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
+        // WhatsApp reminder (existing)
+        $schedule->command('send:whatsapp-reminder')->monthlyOn(15, '00:00');
+        
+        // Firebase Push Notification reminder - tanggal 15
+        $schedule->command('notification:payment-reminder --date=15')->monthlyOn(15, '08:00');
+        
+        // Firebase Push Notification reminder - tanggal 20
+        $schedule->command('notification:payment-reminder --date=20')->monthlyOn(20, '08:00');
     }
 
     /**
@@ -25,3 +32,5 @@ class Kernel extends ConsoleKernel
         require base_path('routes/console.php');
     }
 }
+
+

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <title>Selinggo-Net | Aplikasi Tagihan Pelanggan</title>
+    <title>Apik Corporation | Aplikasi Tagihan Pelanggan</title>
 
     @include('template.head')
 
@@ -85,6 +85,8 @@
     </div>
 
     @include('template.script')
+
+    @yield('scripts')
 
 </body>
 

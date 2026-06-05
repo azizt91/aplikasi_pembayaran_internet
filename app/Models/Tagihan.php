@@ -12,12 +12,16 @@ class Tagihan extends Model
     protected $table = 'tagihan';
     protected $primaryKey = 'id';
     protected $fillable = [
+        'reference',
         'bulan',
         'tahun',
         'id_pelanggan',
         'tagihan',
         'status',
         'tgl_bayar',
+        'pembayaran_via',
+        'broadcast_count',
+        'updated_at'
     ];
 
     public function bulan()

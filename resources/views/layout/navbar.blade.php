@@ -15,14 +15,18 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                {{ auth()->user()->nama ?? '' }}
-                                <br>
-                                <small>{{ auth()->user()->level ?? '' }}</small>
-                                </span>
                                 @php
-                                $profilePicturePath = auth()->user()->profile_picture ? asset('storage/' . auth()->user()->profile_picture) : asset('template/img/undraw_profile.svg');
+                                    // Check which guard is authenticated
+                                    $user = auth()->check() ? auth()->user() : auth()->guard('pelanggan')->user();
+                                    $profilePicturePath = ($user && $user->profile_picture) 
+                                        ? asset('storage/' . $user->profile_picture) 
+                                        : asset('template/img/undraw_profile.svg');
                                 @endphp
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                {{ $user->nama ?? '' }}
+                                <br>
+                                <small>{{ $user->level ?? ($user->status ?? '') }}</small>
+                                </span>
                                 <img class="img-profile rounded-circle"
                                     src="{{ $profilePicturePath }}" style="width: 50px; height: 50px;">
                             </a>
@@ -32,8 +36,8 @@
                                 <h6 class="dropdown-header d-flex align-items-center">
                                     <img class="img-profile rounded-circle mr-3" src="{{ $profilePicturePath }}" style="width: 50px; height: 50px;"/>
                                     <div class="dropdown-user-details">
-                                        <div class="dropdown-user-details-name text-gray-800">{{ auth()->user()->nama ?? '' }}</div>
-                                        <div class="dropdown-user-details-email">{{ auth()->user()->email ?? '' }}</div>
+                                        <div class="dropdown-user-details-name text-gray-800">{{ $user->nama ?? '' }}</div>
+                                        <div class="dropdown-user-details-email">{{ $user->email ?? '' }}</div>
                                     </div>
                                 </h6>
                                 <div class="dropdown-divider"></div>
@@ -44,6 +48,8 @@
                                 @include('sweetalert::alert')
                             </div>
                         </li>
+
+
 
                     </ul>
                 </nav>

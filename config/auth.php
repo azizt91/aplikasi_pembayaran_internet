@@ -44,6 +44,17 @@ return [
         'pelanggan' => [
             'driver' => 'session',
             'provider' => 'pelanggan',
+            'model' => App\Models\Pelanggan::class,
+        ],
+
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'pelanggan',
+        ],
+        
+        'sanctum' => [
+            'driver' => 'sanctum',
+            'provider' => 'pelanggan',
         ],
     ],
 

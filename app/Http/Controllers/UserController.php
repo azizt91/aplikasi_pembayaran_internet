@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Facades\Storage;
+
 class UserController extends Controller
 {
     /**
@@ -26,16 +28,13 @@ class UserController extends Controller
         return view('users.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $data = [
@@ -45,8 +44,15 @@ class UserController extends Controller
             'level' => 'Admin',
         ];
 
-        $user = User::create($data);
-        Alert::toast('User created successfully!','success');
+        if ($request->hasFile('profile_picture')) {
+            $image = $request->file('profile_picture');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/profile_pictures', $imageName);
+            $data['profile_picture'] = 'profile_pictures/' . $imageName;
+        }
+
+        User::create($data);
+        Alert::toast('User created successfully!', 'success');
         return redirect()->route('users.index');
     }
 
@@ -58,23 +64,19 @@ class UserController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
+
     public function edit(User $user)
     {
         return view('users.edit', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         $request->validate([
             'nama' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
             'password' => 'nullable|string|min:8|confirmed',
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         $user = User::findOrFail($id);
@@ -82,24 +84,38 @@ class UserController extends Controller
         $user->nama = $request->input('nama');
         $user->email = $request->input('email');
 
-        // Update password jika diisi
         if ($request->filled('password')) {
             $user->password = Hash::make($request->input('password'));
         }
 
+        if ($request->hasFile('profile_picture')) {
+            // Hapus foto profil lama jika ada
+            if ($user->profile_picture) {
+                Storage::delete('public/' . $user->profile_picture);
+            }
+            
+            $image = $request->file('profile_picture');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $image->storeAs('public/profile_pictures', $imageName);
+            $user->profile_picture = 'profile_pictures/' . $imageName;
+        }
+
         $user->save();
-        Alert::toast('User updated successfully!','success');
+        Alert::toast('User updated successfully!', 'success');
         return redirect()->route('users.index');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        // Add logic to delete the user
+        $user = User::findOrFail($id);
+        
+        // Hapus foto profil jika ada
+        if ($user->profile_picture) {
+            Storage::delete('public/' . $user->profile_picture);
+        }
+
         $user->delete();
-        Alert::toast('User deleted successfully!','success');
+        Alert::toast('User deleted successfully!', 'success');
         return redirect()->route('users.index');
     }
 }

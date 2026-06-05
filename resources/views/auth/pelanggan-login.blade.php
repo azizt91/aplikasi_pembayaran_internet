@@ -1,7 +1,3 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,16 +9,16 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Selinggo-Net - Login</title>
+  <title>Apik Corporation - Login Customer</title>
   <!-- PWA  -->
   <meta name="theme-color" content="#ffffff"/>
-  <link rel="apple-touch-icon" href="{{ asset('template') }}/img/logo.png">
-  <link rel="manifest" href="{{ asset('/manifest.json') }}">      
+  <link rel="apple-touch-icon" href="{{ asset('template') }}/img/logo_ac.png">
+  <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
   <!-- Custom fonts for this template-->
   <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <link rel="icon" type="image" href="{{ asset('template/img/sn.png') }}"/>
+  <link rel="icon" type="image" href="{{ asset('template/img/AP.png') }}"/>
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
@@ -46,8 +42,8 @@
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
-                    <img src="{{ asset('template') }}/img/sn-blue.png" alt="Logo" class="img-fluid logo" style="max-width: 75px;">
-                    <h1 class="h4 text-gray-900 mb-4">Login Customer</h1>
+                    <img src="{{ asset('template') }}/img/AP.png" alt="Logo" class="img-fluid logo" style="max-width: 75px;">
+                    <h1 class="h4 text-gray-900 mb-4">Selamat Datang!</h1>
                   </div>
                   <form action="{{ route('pelanggan.login') }}" method="POST">
                     @csrf
@@ -61,10 +57,11 @@
                         </div>
                     @endif
                     <div class="form-group">
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+                        {{-- <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" placeholder="Masukkan Alamat Email..." required autocomplete="email" autofocus> --}}
+                        <input name="email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukkan alamat email...">
                     </div>
                     <div class="form-group">
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Password">
                     </div>
                     <div class="form-group">
                         <div class="custom-control custom-checkbox small">
@@ -74,10 +71,10 @@
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
                 </form>
-                
+
                   <hr>
                   <div class="text-center">
-                    <span>Apakah Anda Admin? <a href="{{ route('login') }}">Log in here</a></span>
+                    <span>Apakah anda Admin? <a href="{{ route('login') }}">Log in disini</a></span>
                   </div>
                 </div>
               </div>

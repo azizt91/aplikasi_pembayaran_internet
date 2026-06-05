@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Paket;
 use App\Models\Pelanggan;
 use App\Models\Tagihan;
+use App\Models\Pengeluaran;
 use App\Models\RouterosAPI;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
@@ -60,7 +61,7 @@ class DashboardController extends Controller
                 'identity' => $identity[0]['name'],
                 'statusUpCount' => $statusUpCount,
                 'statusDownCount' => $statusDownCount,
-				
+
             ];
 
             return view('dashboard', $data);
@@ -162,17 +163,17 @@ class DashboardController extends Controller
 
         return view('realtime.load', compact('data'));
     }
-	
-	// public function dashboard()
-	// {
-	// 	$jumlah_pelanggan = Pelanggan::all()->count();
-    //     $jumlah_paket = Paket::all()->count();
-	// 	return view('dashboard')->with('jumlah_pelanggan',$jumlah_pelanggan)->with('jumlah_paket', $jumlah_paket);
-	// }
 
-    // public function showDashboard()
+    // public function dashboard()
     // {
-        
+    // 	$jumlah_pelanggan = Pelanggan::all()->count();
+    //     $jumlah_paket = Paket::all()->count();
+    // 	return view('dashboard')->with('jumlah_pelanggan',$jumlah_pelanggan)->with('jumlah_paket', $jumlah_paket);
+    // }
+
+
+    // public function showDashboard(Request $request)
+    // {
     //     // Ambil jumlah paket dari model Paket
     //     $jumlah_paket = Paket::count();
 
@@ -180,78 +181,211 @@ class DashboardController extends Controller
 
     //     $jumlah_pelanggan_nonaktif = Pelanggan::where('status', 'nonaktif')->count();
 
+    //     $activePelangganIds = Pelanggan::where('status', 'aktif')->pluck('id_pelanggan');
 
-    //     $dataForChart = Tagihan::selectRaw('YEAR(tgl_bayar) as tahun, MONTH(tgl_bayar) as bulan, sum(tagihan) as total_tagihan')
-    //                        ->groupBy('tahun', 'bulan')
-    //                        ->orderBy('tahun', 'asc')
-    //                        ->orderBy('bulan', 'asc')
-    //                        ->get()
-    //                        ->mapToGroups(function ($item) {
-    //                            return [$item->tahun => $item->total_tagihan];
-    //                        });
+    //     // Tentukan tahun dan bulan saat ini
+    //     $now = Carbon::now();
+    //     $year = $now->year;
+    //     $month = $now->month;
 
+    //     // Hitung jumlah pelanggan lunas dengan status aktif
+    //     $jumlah_pelanggan_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
+    //         ->whereHas('tagihan', function ($query) use ($year, $month) {
+    //             $query->where('status', 'LS')
+    //                   ->whereYear('created_at', $year)
+    //                   ->whereMonth('created_at', $month);
+    //         })->count();
 
-    
+    //     // Hitung jumlah pelanggan belum lunas dengan status aktif
+    //     $jumlah_pelanggan_belum_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
+    //         ->whereHas('tagihan', function ($query) use ($year, $month) {
+    //             $query->where(function ($query) use ($year, $month) {
+    //                 $query->where('status', '!=', 'LS')
+    //                       ->orWhereNull('status');
+    //             })->whereYear('created_at', $year)
+    //               ->whereMonth('created_at', $month);
+    //         })->count();
+
+    //     // Logika untuk pengambilan pendapatan berdasarkan bulan dan tahun yang dipilih
+    //     $selectedMonth = $request->input('bulan', $month); // Gunakan bulan saat ini sebagai default
+    //     $selectedYear = $request->input('tahun', $year);   // Gunakan tahun saat ini sebagai default
+
+    //     $totalRevenue = Tagihan::whereYear('created_at', $selectedYear)
+    //         ->whereMonth('created_at', $selectedMonth)
+    //         ->where('status', 'LS')
+    //         ->sum('tagihan');
+
+    //     // Query untuk menghitung pengeluaran bulan ini
+    //     $pengeluaranBulanIni = Pengeluaran::whereYear('tanggal', $selectedYear)
+    //                                       ->whereMonth('tanggal', $selectedMonth)
+    //                                       ->sum('jumlah');
+
+    //     // Hitung total pendapatan setelah dikurangi pengeluaran
+    //     $netRevenue = $totalRevenue - $pengeluaranBulanIni;
+
+    //     // Hitung tagihan bulan ini
     //     $tagihanBulanIni = Tagihan::where('status', 'LS')
-    //     ->whereYear('tgl_bayar', Carbon::now()->year)
-    //     ->whereMonth('tgl_bayar', Carbon::now()->month)
-    //     ->sum('tagihan');
+    //         ->whereYear('created_at', Carbon::now()->year)
+    //         ->whereMonth('created_at', Carbon::now()->month)
+    //         ->sum('tagihan');
 
-    //     $jumlah_pelanggan_lunas = Pelanggan::whereHas('tagihan', function ($query) {
-    //         $query->where('status', 'LS')
-    //             ->whereYear('tgl_bayar', Carbon::now()->year)
-    //             ->whereMonth('tgl_bayar', Carbon::now()->month);
-    //     })->count();
-    
-    //     // Ambil jumlah pelanggan Belum Lunas (BL) berdasarkan bulan dan tahun ini
-    //     $jumlah_pelanggan_belum_lunas = Pelanggan::whereDoesntHave('tagihan', function ($query) {
-    //         $query->where('status', 'LS')
-    //             ->whereYear('tgl_bayar', Carbon::now()->year)
-    //             ->whereMonth('tgl_bayar', Carbon::now()->month);
-    //     })->count();
+    //     // Mendapatkan data pendapatan dan pengeluaran setiap bulan
+    //     $pendapatan = [];
+    //     $pengeluaran = [];
 
-    //     return view('dashboard', compact('jumlah_paket', 'tagihanBulanIni', 'jumlah_pelanggan_lunas', 'jumlah_pelanggan_belum_lunas', 'jumlah_pelanggan_aktif', 'jumlah_pelanggan_nonaktif', 'dataForChart'));
+    //     for ($month = 1; $month <= 12; $month++) {
+    //         $pendapatan[] = Tagihan::whereYear('created_at', $selectedYear)
+    //             ->whereMonth('created_at', $month)
+    //             ->where('status', 'LS')
+    //             ->sum('tagihan');
+
+    //         $pengeluaran[] = Pengeluaran::whereYear('tanggal', $selectedYear)
+    //             ->whereMonth('tanggal', $month)
+    //             ->sum('jumlah');
+    //     }
+
+    //     if ($request->ajax()) {
+    //         // Kembalikan data dalam format JSON jika request adalah AJAX
+    //         return response()->json([
+    //             'netRevenue' => rupiah($netRevenue),
+    //             'totalRevenue' => rupiah($totalRevenue),
+    //             'pengeluaranBulanIni' => rupiah($pengeluaranBulanIni),
+    //             'pendapatan' => $pendapatan,
+    //             'pengeluaran' => $pengeluaran
+    //         ]);
+    //     }
+
+
+
+    //     return view('dashboard', compact(
+    //         'jumlah_paket',
+    //         'tagihanBulanIni',
+    //         'jumlah_pelanggan_lunas',
+    //         'jumlah_pelanggan_belum_lunas',
+    //         'jumlah_pelanggan_aktif',
+    //         'jumlah_pelanggan_nonaktif',
+    //         'totalRevenue',
+    //         'selectedMonth',
+    //         'selectedYear',
+    //         'pengeluaranBulanIni',
+    //         'netRevenue',
+    //         'pendapatan',
+    //         'pengeluaran'
+    //     ));
     // }
 
-    public function showDashboard()
+    // public function showDashboard(Request $request)
+    // {
+    //     // Ambil jumlah paket dari model Paket
+    //     $jumlah_paket = Paket::count();
+
+    //     $jumlah_pelanggan_aktif = Pelanggan::where('status', 'aktif')->count();
+
+    //     $jumlah_pelanggan_nonaktif = Pelanggan::where('status', 'nonaktif')->count();
+
+    //     $tagihanBulanIni = Tagihan::where('status', 'LS')
+    //         ->whereYear('created_at', Carbon::now()->year)
+    //         ->whereMonth('created_at', Carbon::now()->month)
+    //         ->sum('tagihan');
+
+    //     $activePelangganIds = Pelanggan::where('status', 'aktif')->pluck('id_pelanggan');
+
+    //     // Tentukan tahun dan bulan saat ini
+    //     $now = Carbon::now();
+    //     $year = $now->year;
+    //     $month = $now->month;
+
+    //     // Hitung jumlah pelanggan lunas dengan status aktif
+    //     $jumlah_pelanggan_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
+    //         ->whereHas('tagihan', function ($query) use ($year, $month) {
+    //             $query->where('status', 'LS')
+    //                   ->whereYear('created_at', $year)
+    //                   ->whereMonth('created_at', $month);
+    //         })->count();
+
+    //     // Hitung jumlah pelanggan belum lunas dengan status aktif
+    //     $jumlah_pelanggan_belum_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
+    //         ->whereHas('tagihan', function ($query) use ($year, $month) {
+    //             $query->where(function ($query) use ($year, $month) {
+    //                 $query->where('status', '!=', 'LS')
+    //                       ->orWhereNull('status');
+    //             })->whereYear('created_at', $year)
+    //               ->whereMonth('created_at', $month);
+    //         })->count();
+
+    //     // Logika untuk pengambilan pendapatan berdasarkan bulan dan tahun yang dipilih
+    //     $selectedMonth = $request->input('bulan', $month); // Gunakan bulan saat ini sebagai default
+    //     $selectedYear = $request->input('tahun', $year);   // Gunakan tahun saat ini sebagai default
+
+    //     $totalRevenue = Tagihan::whereYear('created_at', $selectedYear)
+    //         ->whereMonth('created_at', $selectedMonth)
+    //         ->where('status', 'LS')
+    //         ->sum('tagihan');
+
+    //     // Query untuk menghitung pengeluaran bulan ini
+    //     $pengeluaranBulanIni = Pengeluaran::whereYear('tanggal', $selectedYear)
+    //                                       ->whereMonth('tanggal', $selectedMonth)
+    //                                       ->sum('jumlah');
+
+    //     // Hitung total pendapatan setelah dikurangi pengeluaran
+    //     $netRevenue = $totalRevenue - $pengeluaranBulanIni;
+
+    //     // Mendapatkan data pendapatan dan pengeluaran setiap bulan
+    //     $pendapatan = [];
+    //     $pengeluaran = [];
+
+    //     for ($month = 1; $month <= 12; $month++) {
+    //         $pendapatan[] = Tagihan::whereYear('created_at', $selectedYear)
+    //             ->whereMonth('created_at', $month)
+    //             ->where('status', 'LS')
+    //             ->sum('tagihan');
+
+    //         $pengeluaran[] = Pengeluaran::whereYear('tanggal', $selectedYear)
+    //             ->whereMonth('tanggal', $month)
+    //             ->sum('jumlah');
+    //     }
+
+    //     if ($request->ajax()) {
+    //         // Kembalikan data dalam format JSON jika request adalah AJAX
+    //         return response()->json([
+    //             'netRevenue' => rupiah($netRevenue),
+    //             'totalRevenue' => rupiah($totalRevenue),
+    //             'pengeluaranBulanIni' => rupiah($pengeluaranBulanIni),
+    //             'pendapatan' => rupiah($pendapatan),
+    //             'pengeluaran' => rupiah($pengeluaran)
+    //         ]);
+    //     }
+
+    //     return view('dashboard', compact(
+    //         'jumlah_paket',
+    //         'tagihanBulanIni',
+    //         'jumlah_pelanggan_lunas',
+    //         'jumlah_pelanggan_belum_lunas',
+    //         'jumlah_pelanggan_aktif',
+    //         'jumlah_pelanggan_nonaktif',
+    //         'totalRevenue',
+    //         'selectedMonth',
+    //         'selectedYear',
+    //         'pengeluaranBulanIni',
+    //         'netRevenue',
+    //         'pendapatan',
+    //         'pengeluaran'
+    //     ));
+    // }
+
+    public function showDashboard(Request $request)
     {
         // Ambil jumlah paket dari model Paket
         $jumlah_paket = Paket::count();
-    
+
         $jumlah_pelanggan_aktif = Pelanggan::where('status', 'aktif')->count();
-    
+
         $jumlah_pelanggan_nonaktif = Pelanggan::where('status', 'nonaktif')->count();
 
-    
         $tagihanBulanIni = Tagihan::where('status', 'LS')
-            ->whereYear('created_at', Carbon::now()->year)
-            ->whereMonth('created_at', Carbon::now()->month)
-            ->sum('tagihan');
-
-        // Ambil semua ID pelanggan dengan status aktif
-        // $activePelangganIds = Pelanggan::where('status', 'aktif')->pluck('id_pelanggan');
-
-        // // Hitung jumlah pelanggan lunas dengan status aktif
-        // $jumlah_pelanggan_lunas = 0;
-        // if ($activePelangganIds->isNotEmpty()) {
-        //     $jumlah_pelanggan_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
-        //         ->whereHas('tagihan', function ($query) {
-        //             $query->where('status', 'LS')
-        //                 ->whereYear('tgl_bayar', Carbon::now()->year)
-        //                 ->whereMonth('tgl_bayar', Carbon::now()->month);
-        //         })->count();
-        // }
-
-        // // Hitung jumlah pelanggan belum lunas dengan status aktif
-        // $jumlah_pelanggan_belum_lunas = 0;
-        // if ($activePelangganIds->isNotEmpty()) {
-        //     $jumlah_pelanggan_belum_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
-        //         ->whereDoesntHave('tagihan', function ($query) {
-        //             $query->where('status', 'LS')
-        //                 ->whereYear('tgl_bayar', Carbon::now()->year)
-        //                 ->whereMonth('tgl_bayar', Carbon::now()->month);
-        //         })->count();
-        // }
+        ->where('tahun', Carbon::now()->year)
+        ->where('bulan', Carbon::now()->month)
+        ->sum('tagihan');
 
         $activePelangganIds = Pelanggan::where('status', 'aktif')->pluck('id_pelanggan');
 
@@ -259,57 +393,157 @@ class DashboardController extends Controller
         $now = Carbon::now();
         $year = $now->year;
         $month = $now->month;
-        
+
         // Hitung jumlah pelanggan lunas dengan status aktif
         $jumlah_pelanggan_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
-            ->whereHas('tagihan', function ($query) use ($year, $month) {
-                $query->where('status', 'LS')
-                      ->whereYear('created_at', $year)
-                      ->whereMonth('created_at', $month);
-            })->count();
-        
+        ->whereHas('tagihan', function ($query) use ($year, $month) {
+            $query->where('status', 'LS')
+            ->where('tahun', $year)
+            ->where('bulan', $month);
+        })->count();
+
         // Hitung jumlah pelanggan belum lunas dengan status aktif
         $jumlah_pelanggan_belum_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
-            ->whereHas('tagihan', function ($query) use ($year, $month) {
-                // Gunakan `created_at` untuk menentukan apakah tagihan dibuat di bulan dan tahun saat ini
-                $query->where(function ($query) use ($year, $month) {
-                    $query->where('status', '!=', 'LS')
-                          ->orWhereNull('status');
-                })->whereYear('created_at', $year)
-                  ->whereMonth('created_at', $month);
-            })->count();
+        ->whereHas('tagihan', function ($query) use ($year, $month) {
+            $query->where(function ($query) use ($year, $month) {
+                $query->where('status', '!=', 'LS')
+                ->orWhereNull('status');
+            })->where('tahun', $year)
+            ->where('bulan', $month);
+        })->count();
 
+        // Logika untuk pengambilan pendapatan berdasarkan bulan dan tahun yang dipilih
+        $selectedMonth = $request->input('bulan', $month); // Gunakan bulan saat ini sebagai default
+        $selectedYear = $request->input('tahun', $year);   // Gunakan tahun saat ini sebagai default
 
-        // $activePelangganIds = Pelanggan::where('status', 'aktif')->pluck('id_pelanggan');
+        $totalRevenue = Tagihan::where('tahun', $selectedYear)
+        ->where('bulan', $selectedMonth)
+        ->where('status', 'LS')
+        ->sum('tagihan');
 
-        // // Tentukan tahun dan bulan saat ini
-        // $now = Carbon::now();
-        // $year = $now->year;
-        // $month = $now->month;
+        // Query untuk menghitung pengeluaran bulan ini
+        $pengeluaranBulanIni = Pengeluaran::where('tahun', $selectedYear)
+        ->where('bulan', $selectedMonth)
+        ->sum('jumlah');
 
-        // // Hitung jumlah pelanggan lunas dengan status aktif
-        // $jumlah_pelanggan_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
-        //     ->whereHas('tagihan', function ($query) use ($year, $month) {
-        //         $query->where('status', 'LS')
-        //             ->whereYear('tgl_bayar', $year)
-        //             ->whereMonth('tgl_bayar', $month);
-        //     })->count();
+        // Hitung total pendapatan setelah dikurangi pengeluaran
+        $netRevenue = $totalRevenue - $pengeluaranBulanIni;
 
-        // // Hitung jumlah pelanggan belum lunas dengan status aktif
-        // $jumlah_pelanggan_belum_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
-        //     ->whereDoesntHave('tagihan', function ($query) use ($year, $month) {
-        //         $query->where('status', 'LS')
-        //             ->whereYear('tgl_bayar', $year)
-        //             ->whereMonth('tgl_bayar', $month);
-        //     })
-        //     ->orWhereHas('tagihan', function ($query) use ($year, $month) {
-        //         $query->where('status', '!=', 'LS')
-        //             ->orWhereNull('status');
-        //     })->count();
+        // Mendapatkan data pendapatan dan pengeluaran setiap bulan
+        $pendapatan = [];
+        $pengeluaran = [];
 
-    
-        // Mengirimkan variabel $dataForChart ke view
-        return view('dashboard', compact('jumlah_paket', 'tagihanBulanIni', 'jumlah_pelanggan_lunas', 'jumlah_pelanggan_belum_lunas', 'jumlah_pelanggan_aktif', 'jumlah_pelanggan_nonaktif'));
+        for ($month = 1; $month <= 12; $month++) {
+            $pendapatan[] = Tagihan::where('tahun', $selectedYear)
+            ->where('bulan', $month)
+            ->where('status', 'LS')
+            ->sum('tagihan');
+
+            $pengeluaran[] = Pengeluaran::where('tahun', $selectedYear)
+            ->where('bulan', $month)
+            ->sum('jumlah');
+        }
+
+        if ($request->ajax()) {
+            // Kembalikan data dalam format JSON jika request adalah AJAX
+            return response()->json([
+                'netRevenue' => $netRevenue,
+                'totalRevenue' => $totalRevenue,
+                'pengeluaranBulanIni' => $pengeluaranBulanIni,
+                'pendapatan' => $pendapatan,
+                'pengeluaran' => $pengeluaran
+            ]);
+        }
+
+        return view('dashboard', compact(
+            'jumlah_paket',
+            'tagihanBulanIni',
+            'jumlah_pelanggan_lunas',
+            'jumlah_pelanggan_belum_lunas',
+            'jumlah_pelanggan_aktif',
+            'jumlah_pelanggan_nonaktif',
+            'totalRevenue',
+            'selectedMonth',
+            'selectedYear',
+            'pengeluaranBulanIni',
+            'netRevenue',
+            'pendapatan',
+            'pengeluaran'
+        ));
     }
-    
+
+    //metode API
+
+    public function showDashboardApi(Request $request)
+    {
+        $jumlah_paket = Paket::count();
+        $jumlah_pelanggan_aktif = Pelanggan::where('status', 'aktif')->count();
+        $jumlah_pelanggan_nonaktif = Pelanggan::where('status', 'nonaktif')->count();
+
+        $now = Carbon::now();
+        $year = $request->input('tahun', $now->year);
+        $month = $request->input('bulan', $now->month);
+
+        $tagihanBulanIni = Tagihan::where('status', 'LS')
+        ->whereYear('created_at', $year)
+        ->whereMonth('created_at', $month)
+        ->sum('tagihan');
+
+        $activePelangganIds = Pelanggan::where('status', 'aktif')->pluck('id_pelanggan');
+
+        $jumlah_pelanggan_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
+        ->whereHas('tagihan', function ($query) use ($year, $month) {
+            $query->where('status', 'LS')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month);
+        })->count();
+
+        $jumlah_pelanggan_belum_lunas = Pelanggan::whereIn('id_pelanggan', $activePelangganIds)
+        ->whereHas('tagihan', function ($query) use ($year, $month) {
+            $query->where(function ($query) use ($year, $month) {
+                $query->where('status', '!=', 'LS')
+                ->orWhereNull('status');
+            })->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month);
+        })->count();
+
+        $totalRevenue = Tagihan::where('status', 'LS')
+        ->whereYear('created_at', $year)
+        ->whereMonth('created_at', $month)
+        ->sum('tagihan');
+
+        $pengeluaranBulanIni = Pengeluaran::whereYear('created_at', $year)
+        ->whereMonth('created_at', $month)
+        ->sum('jumlah');
+
+        $netRevenue = $totalRevenue - $pengeluaranBulanIni;
+
+        $pendapatan = [];
+        $pengeluaran = [];
+        for ($m = 1; $m <= 12; $m++) {
+            $pendapatan[] = Tagihan::where('status', 'LS')
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $m)
+            ->sum('tagihan');
+
+            $pengeluaran[] = Pengeluaran::whereYear('created_at', $year)
+            ->whereMonth('created_at', $m)
+            ->sum('jumlah');
+        }
+
+        return response()->json([
+            'jumlah_paket' => $jumlah_paket,
+            'jumlah_pelanggan_aktif' => $jumlah_pelanggan_aktif,
+            'jumlah_pelanggan_nonaktif' => $jumlah_pelanggan_nonaktif,
+            'jumlah_pelanggan_lunas' => $jumlah_pelanggan_lunas,
+            'jumlah_pelanggan_belum_lunas' => $jumlah_pelanggan_belum_lunas,
+            'tagihanBulanIni' => $tagihanBulanIni,
+            'totalRevenue' => $totalRevenue,
+            'pengeluaranBulanIni' => $pengeluaranBulanIni,
+            'netRevenue' => $netRevenue,
+            'pendapatan' => $pendapatan,
+            'pengeluaran' => $pengeluaran
+        ]);
+
+    }
 }

@@ -39,11 +39,11 @@
                             <tr>
                                 <td class="small">{{ $index + 1 }}</td>
                                 <td class="small">{{ $item->nama }}</td>
-                                <td class="small">{{ \Carbon\Carbon::now()->format('F Y') }}</td>
+                                <td class="small">{{ $namaBulan[\Carbon\Carbon::now()->month] }} {{ \Carbon\Carbon::now()->year }}</td>
                                 <td class="small">
                                     @php
                                         $tagihanLunas = $item->tagihan->where('status', 'LS')->filter(function ($tagihan) {
-                                            return $tagihan->status === 'LS' && $tagihan->created_at->year == \Carbon\Carbon::now()->year && $tagihan->created_at->month == \Carbon\Carbon::now()->month;
+                                            return $tagihan->status === 'LS' && $tagihan->bulan == \Carbon\Carbon::now()->month && $tagihan->tahun == \Carbon\Carbon::now()->year;
                                         })->first();
                                     @endphp
                                     @if ($tagihanLunas && $tagihanLunas->id_pelanggan === $item->id_pelanggan)
@@ -59,11 +59,11 @@
                                     @php
                                         $bulanIni = \Carbon\Carbon::now()->month;
                                         $tahunIni = \Carbon\Carbon::now()->year;
-                                
+
                                         $tagihanLunas = $item->tagihan()->where('status', 'LS')
                                             ->where('id_pelanggan', $item->id_pelanggan)
-                                            ->whereMonth('tgl_bayar', $bulanIni)
-                                            ->whereYear('tgl_bayar', $tahunIni)
+                                            ->where('bulan', $bulanIni) // Periksa bulan tagihan
+                                            ->where('tahun', $tahunIni) // Periksa tahun tagihan
                                             ->first();
                                     @endphp
                                     @if ($tagihanLunas)
@@ -83,4 +83,5 @@
         </div>
     </div>
 @endsection
+
 

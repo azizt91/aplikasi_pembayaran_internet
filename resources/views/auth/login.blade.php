@@ -9,12 +9,17 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Selinggo-Net - Login</title>
+  <title>Apik Corporation - Login</title>
+  
+  <!-- PWA  -->
+  <meta name="theme-color" content="#ffffff"/>
+  <link rel="apple-touch-icon" href="{{ asset('template') }}/img/logo_ac.png">
+  <link rel="manifest" href="{{ asset('/manifest.json') }}">
 
   <!-- Custom fonts for this template-->
   <link href="{{ asset('template/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-  <link rel="icon" type="image" href="{{ asset('template/img/sn.png') }}"/>
+  <link rel="icon" type="image" href="{{ asset('template/img/AP.png') }}"/>
 
   <!-- Custom styles for this template-->
   <link href="{{ asset('template/css/sb-admin-2.min.css') }}" rel="stylesheet">
@@ -38,7 +43,9 @@
               <div class="col-lg-6">
                 <div class="p-5">
                   <div class="text-center">
-                    <h1 class="h4 text-gray-900 mb-4">Login</h1>
+                    <img src="{{ asset('template') }}/img/AP.png" alt="Logo" class="img-fluid logo" style="max-width: 75px;">
+                    <h1 class="h4 text-gray-900 mb-4">Selamat Datang!</h1>
+                    <p class="text-muted small mb-4">Silakan masuk ke akun Anda</p>
                   </div>
                   <form action="{{ route('login.aksi') }}" method="POST" class="user">
                     @csrf
@@ -64,12 +71,20 @@
                       </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
-                    
+
                   </form>
                   <hr>
-                  {{-- <div class="text-center">
-                    <a class="small" href="{{ route('pelanggan.login') }}">Pelanggan!</a>
-                  </div> --}}
+                  <div class="text-center">
+                    <small class="text-muted">
+                      <i class="fas fa-info-circle"></i> 
+                      Lupa username atau password? 
+                      <a href="https://wa.me/6285169968884?text=Halo%20Admin%2C%20saya%20mengalami%20kendala%20login.%20Saya%20lupa%20username%2Fpassword%20akun%20saya.%20Mohon%20bantuannya.%20Terima%20kasih." 
+                         target="_blank" 
+                         class="text-primary font-weight-bold">
+                        <i class="fab fa-whatsapp"></i> Hubungi Admin
+                      </a>
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
@@ -91,6 +106,23 @@
 
   <!-- Custom scripts for all pages-->
   <script src="{{ asset('template/js/sb-admin-2.min.js') }}"></script>
+
+  <!-- PWA Service Worker -->
+  <script src="{{ asset('/sw.js') }}"></script>
+  <script>
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js").then(
+        (registration) => {
+          console.log("Service worker registration succeeded:", registration);
+        },
+        (error) => {
+          console.error(`Service worker registration failed: ${error}`);
+        },
+      );
+    } else {
+      console.error("Service workers are not supported.");
+    }
+  </script>
 </body>
 
 </html>

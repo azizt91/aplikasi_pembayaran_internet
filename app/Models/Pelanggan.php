@@ -5,19 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class Pelanggan extends Authenticatable
 {
-    use HasFactory, Notifiable;
-
-    // protected $guard = 'pelanggan'; 
+    use HasFactory, Notifiable, HasApiTokens;
 
     protected $table = 'pelanggan';
-    protected $primaryKey = 'id_pelanggan';
-    protected $keyType = 'string';
-    public $incrementing = false;
-    protected $fillable = ['id_pelanggan', 'nama', 'alamat', 'whatsapp', 'email', 'password', 'level', 'id_paket', 'jatuh_tempo','profile_picture', 'status'];
-
+    // Use 'id' as primary key for Sanctum compatibility (integer)
+    // 'id_pelanggan' is just a unique identifier (string)
+    protected $primaryKey = 'id';
+    protected $fillable = ['id_pelanggan', 'nama', 'alamat', 'whatsapp', 'email', 'password', 'level', 'id_paket', 'ip_address', 'profile_picture', 'fcm_token', 'status'];
+    
     public function paket()
     {
         return $this->belongsTo(Paket::class, 'id_paket');
@@ -25,7 +24,7 @@ class Pelanggan extends Authenticatable
 
     public function tagihan()
     {
-        return $this->hasMany(Tagihan::class, 'id_pelanggan');
+        return $this->hasMany(Tagihan::class, 'id_pelanggan', 'id_pelanggan');
     }
 
     public function getProfilePicturePathAttribute()
@@ -38,6 +37,13 @@ class Pelanggan extends Authenticatable
     }
 
 }
+
+
+
+
+    
+
+
 
 
 

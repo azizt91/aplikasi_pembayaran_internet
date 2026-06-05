@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->rememberToken();
+        Schema::table('tagihan', function (Blueprint $table) {
+            $table->enum('pembayaran_via', ['cash', 'online', 'transfer'])->default('cash');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
+        Schema::table('tagihan', function (Blueprint $table) {
+            $table->dropColumn('pembayaran_via');
         });
     }
 };

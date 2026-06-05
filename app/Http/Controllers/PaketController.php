@@ -16,6 +16,13 @@ class PaketController extends Controller
 		$paket = Paket::get();
 		return view('paket.index', ['data' => $paket]);
 	}
+
+	public function viewPaket()
+    {
+        $data = Paket::all();
+        return view('paket.view', compact('data'));
+    }
+	
 	public function tambah()
 	{
 		return view('paket.form');

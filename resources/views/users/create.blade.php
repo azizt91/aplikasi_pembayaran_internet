@@ -8,14 +8,14 @@
           <h6 class="m-0 font-weight-bold text-primary">Tambah User</h6>
         </div>
         <div class="card-body">
-            <form action="{{ route('users.store') }}" method="POST">
+            <form action="{{ route('users.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="form-group">
                     <label for="nama">Nama</label>
-                    <input name="nama" type="text" class="form-control form-control-user @error('nama')is-invalid @enderror" id="exampleInputName" placeholder="Name">
-                  @error('nama')
-                    <span class="invalid-feedback">{{ $message }}</span>
-                  @enderror
+                    <input name="nama" type="text" class="form-control form-control-user @error('nama')is-invalid @enderror" id="exampleInputName" placeholder="Nama">
+                    @error('nama')
+                      <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -38,6 +38,13 @@
                       <span class="invalid-feedback">{{ $message }}</span>
                     @enderror
                 </div>
+                <div class="form-group">
+                    <label for="profile_picture">Foto Profil</label>
+                    <input name="profile_picture" type="file" class="form-control @error('profile_picture')is-invalid @enderror" id="profile_picture">
+                    @error('profile_picture')
+                      <span class="invalid-feedback">{{ $message }}</span>
+                    @enderror
+                </div>
                 <div class="card-footer">
                     <a href="{{ route('users.index') }}" class="btn btn-secondary">Batal</a>
                     <input type="submit" name="Simpan" value="Simpan" class="btn btn-primary">
@@ -47,6 +54,4 @@
       </div>
     </div>
 </div>
-
-
 @endsection

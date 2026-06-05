@@ -2,7 +2,7 @@
 
 return [
     'show_warnings' => false,
-    'public_path' => null,
+    'public_path' => base_path('public'),
     'convert_entities' => true,
     'options' => [
         'font_dir' => storage_path('fonts'),
@@ -18,10 +18,10 @@ return [
         'enable_font_subsetting' => false,
         'pdf_backend' => "CPDF",
         'default_media_type' => "screen",
-        'default_paper_size' => "A4",
+        'default_paper_size' => "a4",
         'default_paper_orientation' => "portrait",
         'default_font' => "serif",
-        'dpi' => 72,
+        'dpi' => 96,
         'enable_php' => false,
         'enable_javascript' => true,
         'enable_remote' => true,

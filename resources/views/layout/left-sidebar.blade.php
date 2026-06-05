@@ -5,9 +5,9 @@
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('dashboard-pelanggan')}}">
                 <div class="sidebar-brand-icon">
                     {{-- <i class="fas fa-wifi"></i> --}}
-                    <img src="{{ asset('template/img/sn.png') }}" alt="Wifi Logo" style="width: 30px; height: 30px;">    
+                    <img src="{{ asset('template/img/AP.png') }}" alt="Wifi Logo" style="width: 30px; height: 30px;">
                 </div>
-                <div class="sidebar-brand-text mx-2">selinggonet</div>
+                <div class="sidebar-brand-text mx-2">Apik Corporation</div>
             </a>
 
             <!-- Divider -->
@@ -33,6 +33,13 @@
                 <a class="nav-link" href="{{ route('tagihan.riwayat_pembayaran') }}">
                     <i class="fas fa-fw fa-history"></i>
                     <span>Riwayat</span></a>
+            </li>
+
+            <!-- Nav Item - WiFi Settings -->
+            <li class="nav-item {{request()->is('wifi-settings*') ? 'active' : ''}}">
+                <a class="nav-link" href="{{ route('wifi-settings.index') }}">
+                    <i class="fas fa-fw fa-wifi"></i>
+                    <span>Pengaturan WiFi</span></a>
             </li>
 
             <!-- Divider -->

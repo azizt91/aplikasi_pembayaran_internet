@@ -11,3 +11,136 @@
     align-items: center;
     transition: all 0.2s;
 }
+
+.payment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Default grid layout */
+    gap: 10px; /* Space antara item */
+}
+
+.payment-method {
+    text-align: center; /* Center content */
+    height: 90px; /* Fixed height */
+    width: 150px; /* Fixed width */
+    display: flex; /* Use flexbox untuk alignment */
+    flex-direction: column; /* Vertical alignment */
+    justify-content: center; /* Center vertically */
+    align-items: center; /* Center horizontally */
+}
+
+.payment-method img {
+    max-width: 100px; /* Max width for image */
+    max-height: 50px; /* Max height for image */
+}
+
+.payment-method p {
+    margin-top: 2px; /* Jarak antar text dan gambar */
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .payment-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); /* Kolom lebih kecil di tablet */
+    }
+    .payment-method {
+        height: 120px; /* Ukuran tombol lebih besar di tablet */
+        width: 120px; /* Ukuran tombol lebih kecil */
+    }
+    .payment-method img {
+        max-width: 80px; /* Gambar lebih kecil di tablet */
+        max-height: 40px; /* Batasan tinggi gambar */
+    }
+}
+
+@media (max-width: 480px) {
+    .payment-grid {
+        grid-template-columns: repeat(2, 1fr); /* Dua kolom pada layar sangat kecil */
+    }
+    .payment-method {
+        height: 100px; /* Ukuran lebih kecil pada layar kecil */
+        width: 100px;
+        border: 1px solid #ccc; /* Tambahkan border pada layar kecil */
+        border-radius: 20px; /* Sudut rounded lebih kecil */
+    }
+    .payment-method img {
+        max-width: 70px; /* Gambar lebih kecil */
+        max-height: 35px;
+    }
+}
+
+/* Tombol dengan hover */
+button.payment-method {
+    border: 1px solid #ccc; /* Tambahkan border */
+    border-radius: 30px; /* Sudut rounded */
+    outline: none; /* Hapus outline saat fokus */
+    background-color: transparent; /* Background transparan */
+    cursor: pointer; /* Pointer cursor saat hover */
+    transition: background-color 0.3s ease; /* Transisi halus saat hover */
+}
+
+button.payment-method:hover {
+    background-color: #ff4c4c; /* Warna saat hover */
+}
+
+
+/* ============================================================================================================== */
+
+.method-direct {
+    display: inline-flex; /* Mengatur konten secara horizontal */
+    flex-direction: column; /* Menjadikan isi vertikal */
+    justify-content: center; /* Vertikal center */
+    align-items: center; /* Horizontal center */
+    padding: 10px; /* Padding di dalam tombol */
+    width: 150px; /* Lebar tombol */
+    height: 90px; /* Tinggi tombol */
+    text-align: center; /* Rata teks tengah */
+    background-color: #fff; /* Background warna putih */
+    border-radius: 30px; /* Sudut melengkung */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Shadow lembut */
+    border: 1px solid #ccc; /* Border abu-abu lembut, sama dengan payment-method */
+    cursor: pointer; /* Pointer saat hover */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* Transisi halus saat hover */
+    margin: 10px; /* Tambahkan margin di atas dan bawah */
+}
+
+.method-direct img {
+    max-width: 100px; /* Batas maksimum lebar gambar */
+    max-height: 50px; /* Batas maksimum tinggi gambar */
+    margin-bottom: 8px; /* Jarak antara gambar dan teks */
+}
+
+.method-direct:hover {
+    background-color: #ff4c4c; /* Warna latar saat hover */
+    border-color: #3f65ff; /* Warna border saat hover */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Tambah shadow saat hover */
+}
+
+@media (max-width: 768px) {
+    .method-direct {
+        width: 120px; /* Lebar di layar lebih kecil */
+        height: 120px; /* Tinggi di layar lebih kecil */
+    }
+    .method-direct img {
+        max-width: 80px; /* Ukuran gambar di layar lebih kecil */
+        max-height: 40px;
+    }
+}
+
+@media (max-width: 480px) {
+    .method-direct {
+        width: 100px; /* Lebar di layar sangat kecil */
+        height: 100px; /* Tinggi di layar sangat kecil */
+        border-radius: 20px; /* Sudut lebih melengkung */
+    }
+    .method-direct img {
+        max-width: 70px; /* Ukuran gambar lebih kecil */
+        max-height: 35px;
+    }
+}
+
+
+
+
+
+
+

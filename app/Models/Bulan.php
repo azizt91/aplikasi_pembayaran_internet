@@ -10,8 +10,8 @@ class Bulan extends Model
     use HasFactory;
 
     protected $table = 'bulan';
-    protected $primaryKey = 'id_bulan';
-    protected $fillable = ['id_bulan','bulan'];
+    protected $primaryKey = 'id';
+    protected $fillable = ['id', 'bulan'];
 
     public function tagihan()
     {

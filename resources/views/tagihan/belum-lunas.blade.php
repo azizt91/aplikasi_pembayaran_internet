@@ -46,7 +46,9 @@
                               @endif
                           </td>
                           <td>
-                            <a href="{{ route('payment') }}" class="btn btn-primary btn-sm">Bayar</a>
+                            <form action="{{ route('payment', ['id' => $tagihan->id]) }}" method="GET">
+                                <button type="submit" class="btn btn-primary btn-sm">Bayar</button>
+                            </form>                            
                           </td>  
                       </tr>
                   @empty
@@ -59,4 +61,5 @@
               </table>
             </div>
           </div>
+    </div>
 @endsection

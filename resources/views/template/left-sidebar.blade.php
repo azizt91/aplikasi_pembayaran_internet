@@ -5,9 +5,9 @@
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{route('dashboard')}}">
                 <div class="sidebar-brand-icon">
                     {{-- <i class="fas fa-wifi"></i> --}}
-                    <img src="{{ asset('template/img/sn.png') }}" alt="Wifi Logo" style="width: 30px; height: 30px;">    
+                    <img src="{{ asset('template/img/AP.png') }}" alt="Wifi Logo" style="width: 30px; height: 30px;">
                 </div>
-                <div class="sidebar-brand-text mx-2">selinggonet</div>
+                <div class="sidebar-brand-text mx-2">Apik Corporation</div>
             </a>
 
             <!-- Divider -->
@@ -127,6 +127,14 @@
                     <span>Pembayaran Lunas</span></a>
             </li>
 
+            <!-- Nav Item - Pembayaran Lunas -->
+            <li class="nav-item {{request()->is('banks') ? 'active' : ''}}">
+                <a class="nav-link" href="{{ route('banks.index') }}">
+                    {{-- <i class="fas fa-fw fa-money-bill-wave"></i> --}}
+                    <i class="fas fa-fw fa-university"></i>
+                    <span>Rekening Bank</span></a>
+            </li>
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
@@ -140,6 +148,22 @@
                 <a class="nav-link" href="{{ route('users.index') }}">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Pengguna Sistem</span></a>
+            </li>
+
+            <!-- Nav Item - Pengeluaran -->
+            <li class="nav-item {{ request()->is('pengeluaran*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('pengeluaran.index') }}">
+                    <i class="fas fa-fw fa-money-bill-wave"></i>
+                    <span>Pengeluaran</span>
+                </a>
+            </li>
+
+            <!-- Nav Item - Settings -->
+            <li class="nav-item {{ request()->is('settings*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('settings.index') }}">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>Pengaturan</span>
+                </a>
             </li>
 
             <!-- Divider -->

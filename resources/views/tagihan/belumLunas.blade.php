@@ -31,7 +31,7 @@
                                 
                                         // Mencari tagihan yang belum lunas untuk pelanggan ini pada bulan dan tahun saat ini
                                         $tagihanBelumLunas = $item->tagihan->filter(function ($tagihan) use ($bulanIni, $tahunIni) {
-                                            return $tagihan->status !== 'LS' && $tagihan->created_at->month == $bulanIni && $tagihan->created_at->year == $tahunIni;
+                                            return $tagihan->status !== 'LS' && $tagihan->bulan == $bulanIni && $tagihan->tahun == $tahunIni;
                                         });
                                     @endphp
                                 
